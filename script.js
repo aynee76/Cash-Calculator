@@ -52,6 +52,104 @@ document.addEventListener("DOMContentLoaded", () =>{
         });
 
         txtFinalCash.textContent = "Total Cash: " + totalCashValue;
+
+        txtFinalCashInWords.textContent = `Total Cash in Words: ${convertToWords(totalCashValue)} Naira`
     }
+
+    btnReset.addEventListener("click", clearData);
+
+    function clearData() {
+
+        cashInputs.forEach((input) => {
+            input.value = "";
+        });
+
+        cashTexts.forEach((text) => {
+            text.textContent = "0";
+        });
+
+        totalCash();
+    }
+
+
+
+
+
+    cashInputs.forEach((input) => {
+        input.addEventListener("input", () => {
+            const value = parseInt(input.value, 10);
+            if(isNaN(value) || value < 0) {
+                input.value = ""
+            }
+        });
+    });
+
+
+    function convertToWords(number) {
+
+        const units = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+
+        const teens = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+
+        const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+
+
+        if(number === 0) {
+            return "Zero"
+        };
+
+        let words = "";
+
+        // if(Math.floor(number / 10000000000) > 0) {
+        //     words += convertToWords(Math.floor(number/100000000)) + " Billion";
+        //     number %= 100000000;
+        // }
+
+
+        if(Math.floor(number / 1000000) > 0) {
+            words += convertToWords(Math.floor(number/1000000)) + " Million";
+            number %= 1000000;
+        }
+
+
+        if(Math.floor(number / 100000) > 0) {
+            words += convertToWords(Math.floor(number/100000)) + " Hundred Thousand";
+            number %= 100000;
+        }
+        
+        if(Math.floor(number / 1000) > 0) {
+            words += convertToWords(Math.floor(number/1000)) + " Thousand";
+            number %= 1000;
+        }
+
+        if(Math.floor(number / 100) > 0) {
+            words += convertToWords(Math.floor(number/100)) + " Hundred";
+            number %= 100;
+        }
+
+
+
+        if(number > 0) {
+            if(number < 10) {
+                words += units[number]
+            } 
+            
+            else if (number < 20) {
+                words += teens[number - 10]
+            }
+
+            else {
+                words += tens[Math.floor(number / 10)];
+                if(number % 10 > 0) {
+                    words += " " + units[number % 10]
+                }
+            }
+        }
+
+
+        return words.trim()
+    }
+
+
 
 })
